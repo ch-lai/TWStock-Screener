@@ -8,7 +8,7 @@ This is only my personal research. I DO NOT recommend you to use it as your trad
 
 
 ## ToDo-List
-- [x] Crawl monthly and seansonal financial reports
+- [x] Crawl monthly revenue and seansonal financial reports
 - [x] Select stock by monthly revenue growth
 - [ ] Design and label features for training
 - [ ] Add in Machine Learning algorithm
