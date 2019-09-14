@@ -1,11 +1,12 @@
+import datetime
+import argparse
 import numpy as np
 import pandas as pd
-import datetime
 import crawl_report
 
 
 # 獲取近n個月的營收資料
-data = crawl_report.cumulative(n_months = 12, load_report = True, save_report = False)
+data = crawl_report.cast_n_months(n_months = 12, load_report = True, save_report = False)
 
 # 數據處理─結合月營收資訊
 for k in data.keys():

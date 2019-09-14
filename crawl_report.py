@@ -82,7 +82,7 @@ def seasonal(year, season):
     df = pd.concat(dfs, sort=False).applymap(lambda x: x if x != '--' else np.nan)
     df = df[df['公司代號'] != '公司代號']
     df = df[~df['公司代號'].isnull()]
-    df = df.drop(['合計：共 901 家'], axis=1)
+    # df = df.drop(['合計：共 901 家'], axis=1)
 
     return df
 
@@ -129,9 +129,9 @@ def cast_n_months(n_months, load_report, save_report):
 def cast_n_seasons(n_seasons, load_report, save_report):
     data = {}
     
-    now = datatime.datetime.now()
+    now = datetime.datetime.now()
     year = now.year
-    month = no.month
+    month = now.month
     
     if month <= 3:
         season = 1
@@ -165,7 +165,7 @@ def cast_n_seasons(n_seasons, load_report, save_report):
             except Exception as e:
                 print('get 404, please check if the financial reports are not revealed')
         
-        # 減一個月
+        # 減一季
         season -= 1
         if season == 0:
             season = 4

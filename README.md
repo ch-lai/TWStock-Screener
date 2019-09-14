@@ -10,6 +10,7 @@ This is only my personal research. I DO NOT recommend you to use it as your trad
 ## ToDo-List
 - [x] Crawl monthly revenue and seansonal financial reports
 - [x] Select stock by monthly revenue growth
+- [X] Add argument parser to change mode
 - [ ] Design and label features for training
 - [ ] Add in Machine Learning algorithm
 - [ ] ...
@@ -23,10 +24,22 @@ Implemented and tested on Ubuntu 18.04 with Python 3.6.
 ```bash
 git clone https://github.com/ch-lai/TWStock-Forecast.git
 ```
+The folder should look something like the following:
+```bash
+cd TWStock-Forecast
+
+├─ data
+│  ├─ monthly
+│  └─ seasonal
+├─ README.md
+├─ main.py
+├─ crawl_report.py
+├─ 2019_9_13_stock_list.txt
+└─ requirements.txt
+```
 
 2. Install Python dependencies
 ```bash
-cd TWStock-Forecast
 pip3 install -r requirements.txt
 ```
 
@@ -34,6 +47,11 @@ pip3 install -r requirements.txt
 ```bash
 python main.py
 ```
+
+
+## Viewing Results
+All results should be saved in `2019_9_13_stock_list.txt`. Here you should see Stock_ID and its corresponding Stock_Name results.
+
 
 ## Report Issue
 - Issues: https://github.com/ch-lai/TWStock-Forecast/issues
