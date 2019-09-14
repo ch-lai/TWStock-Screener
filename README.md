@@ -35,5 +35,8 @@ pip3 install -r requirements.txt
 python main.py
 ```
 
+## Report Issue
+- Issues: https://github.com/ch-lai/TWStock-Forecast/issues
+
 ## LICENSE
 Copyright (c) 2019 [Chao-Hsiang Lai](https://github.com/ch-lai)
