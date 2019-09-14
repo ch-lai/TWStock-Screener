@@ -5,8 +5,14 @@ import pandas as pd
 from io import StringIO
 
 
-def load_csv(year, month):
-    df = pd.read_csv('data/%d_%d.csv'%(year, month))
+def load_csv(year, month, type):
+    if type == 'monthly':
+        df = pd.read_csv('data/monthly/%d_%d.csv'%(year, month))
+    elif type == 'seasonal':
+        df = pd.read_csv('data/seasonal/%d_%d.csv'%(year, month))
+    else:
+        print('get 404, wrong type')
+        
     return df
 
 
@@ -48,20 +54,13 @@ def monthly(year, month):
     return df
 
 
-def seasonal(year, season, type='綜合損益彙總表'):
+def seasonal(year, season):
 
     # 假如是西元，轉成民國
     if year > 1990:
         year -= 1911
 
-    if type == '綜合損益彙總表':
-        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb04'
-    elif type == '資產負債彙總表':
-        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb05'
-    elif type == '營益分析彙總表':
-        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb06'
-    else:
-        print('type does not match')
+    url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb06'
 
     r = requests.post(url, {
         'encodeURIComponent':1,
@@ -74,14 +73,21 @@ def seasonal(year, season, type='綜合損益彙總表'):
     })
 
     r.encoding = 'utf8'
-    dfs = pd.read_html(r.text, header=None)
+    dfs = pd.read_html(r.text)
+    
+    for i, df in enumerate(dfs):
+        df.columns = df.iloc[0]
+        dfs[i] = df.iloc[1:]
+        
+    df = pd.concat(dfs, sort=False).applymap(lambda x: x if x != '--' else np.nan)
+    df = df[df['公司代號'] != '公司代號']
+    df = df[~df['公司代號'].isnull()]
+    df = df.drop(['合計：共 901 家'], axis=1)
 
-    return pd.concat(dfs[1:], axis=0, sort=False)\
-             .set_index(['公司代號'])\
-             .apply(lambda s: pd.to_numeric(s, errors='ceorce'))
+    return df
 
 
-def cumulative(n_months, load_report, save_report):
+def cast_n_months(n_months, load_report, save_report):
     data = {}
 
     now = datetime.datetime.now()
@@ -90,13 +96,11 @@ def cumulative(n_months, load_report, save_report):
 
     # 獲取近n個月的資料
     while len(data) < n_months:
-        
         print('parsing', year, month)
         
-        # 使用 crawlPrice 爬資料
         if load_report:
             try:
-                data['%d-%d-01'%(year, month)] = load_csv(year, month)
+                data['%d-%d-01'%(year, month)] = load_csv(year, month, type='monthly')
             
             except Exception as e:
                 print('get 404, please check if the revenues are not revealed')
@@ -106,7 +110,7 @@ def cumulative(n_months, load_report, save_report):
                 data['%d-%d-01'%(year, month)] = monthly(year, month)
 
                 if save_report:
-                    data['%d-%d-01'%(year, month)].to_csv('data/%d_%d.csv'%(year, month), encoding='utf-8', index=False)
+                    data['%d-%d-01'%(year, month)].to_csv('data/monthly/%d_%d.csv'%(year, month), encoding='utf-8', index=False)
 
             except Exception as e:
                 print('get 404, please check if the revenues are not revealed')
@@ -115,6 +119,56 @@ def cumulative(n_months, load_report, save_report):
         month -= 1
         if month == 0:
             month = 12
+            year -= 1
+
+        time.sleep(10)
+
+    return data
+
+
+def cast_n_seasons(n_seasons, load_report, save_report):
+    data = {}
+    
+    now = datatime.datetime.now()
+    year = now.year
+    month = no.month
+    
+    if month <= 3:
+        season = 1
+    elif month <= 6:
+        season = 2
+    elif month <= 9:
+        season = 3
+    elif month <= 12:
+        season = 4
+    else:
+        print('get 404, please check if the season is conrrect')
+    
+    # 獲取近n個季的資料
+    while len(data) < n_seasons:
+        print('parsing', year, season)
+        
+        if load_report:
+            try:
+                data['%d-%d-01'%(year, season)] = load_csv(year, season, type='seasonal')
+            
+            except Exception as e:
+                print('get 404, please check if the financial reports are not revealed')
+
+        else:
+            try:
+                data['%d-%d-01'%(year, season)] = seasonal(year, season)
+
+                if save_report:
+                    data['%d-%d-01'%(year, season)].to_csv('data/seasonal/%d_%d.csv'%(year, season), encoding='utf-8', index=False)
+
+            except Exception as e:
+                print('get 404, please check if the financial reports are not revealed')
+        
+        # 減一個月
+        season -= 1
+        if season == 0:
+            season = 4
             year -= 1
 
         time.sleep(10)
