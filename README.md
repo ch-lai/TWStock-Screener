@@ -37,7 +37,7 @@ python main.py
 ```
 
 ## Report Issue
-- Issues: https://github.com/ch-lai/TWStock-Forecast/issues
+- Issues: https://github.com/ch-lai/TWStock-Screener/issues
 
 ## LICENSE
 Copyright (c) 2019 [Chao-Hsiang Lai](https://github.com/ch-lai)
