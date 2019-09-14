@@ -9,7 +9,7 @@ data = crawl_report.cumulative(n_months = 12, load_report = True, save_report = 
 
 # 數據處理─結合月營收資訊
 for k in data.keys():
-    data[k].index = data[k]['公司代號'] + ' ' + data[k]['公司名稱']
+    data[k].index = data[k]['公司代號']+' '+data[k]['公司名稱']
     
 df = pd.DataFrame({k:df['當月營收'] for k, df in data.items()}).transpose()
 df.index = pd.to_datetime(df.index)
