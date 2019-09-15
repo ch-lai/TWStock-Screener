@@ -26,20 +26,7 @@ git clone https://github.com/ch-lai/TWStock-Screener.git
 ```
 The folder should look something like the following:
 ```bash
-cd TWStock-Forecast
-
-├─ data
-│  └─ monthly
-├─ README.md
-├─ main.py
-├─ crawl_report.py
-├─ stock_screener.py
-├─ 2019_9_15_stock_list.txt
-└─ requirements.txt
-```
-The folder should look something like the following:
-```bash
-cd TWStock-Forecast
+cd TWStock-Screener
 
 ├─ data
 │  ├─ monthly
@@ -47,9 +34,11 @@ cd TWStock-Forecast
 ├─ README.md
 ├─ main.py
 ├─ crawl_report.py
-├─ 2019_9_13_stock_list.txt
+├─ stock_screener.py
+├─ 2019_9_15_stock_list.txt
 └─ requirements.txt
 ```
+
 
 2. Install Python dependencies
 ```bash
