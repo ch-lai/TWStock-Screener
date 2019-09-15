@@ -8,7 +8,7 @@ import crawl_report
 class StockScreener:
     def __init__(self, n_months=12, load_report=True, save_report=False):
         # 獲取近n個月的營收資料
-        self.data = crawl_report.cumulative(
+        self.data = crawl_report.cast_n_months(
             n_months=12, load_report=True, save_report=False)
 
         # 數據處理─結合月營收資訊
