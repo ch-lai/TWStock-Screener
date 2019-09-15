@@ -10,7 +10,10 @@ ss.Select_screener(_MoM_growth=True,
                    _Total_YoY_growth=True,
                    _Highest_revenue=True,
                    _LongShortTerm_growth=True,
-                   _Trend_growth=True)
+                   _Trend_growth=True,
+                   _GPM_growth=False,
+                   _OPM_growth=False,
+                   _NPM_growth=False)
 
 # Filter stocks
 ss.Filter_stocks()

@@ -13,6 +13,7 @@ This is only my personal research. I DO NOT recommend you to use it as your trad
 - [x] Support six stock screener methods based on monthly revenue
 - [x] Score and sort stock screener results according to revenue increment
 - [ ] Add more stock screener methods based on financial reports
+- [ ] Crawl ROE, ROA, EPS
 - [ ] Backtest
 - [ ] ...
 
