@@ -59,6 +59,7 @@ ss.Select_screener(_MoM_growth=True,
                    _Trend_growth=True)
 ```
 Screenshot of main.py:
+
 ![here](data/demo/main.png)
 
 
