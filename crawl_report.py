@@ -7,7 +7,7 @@ from io import StringIO
 
 
 def load_csv(year, month):
-    df = pd.read_csv('data/%d_%d.csv' % (year, month))
+    df = pd.read_csv('data/monthly/%d_%d.csv' % (year, month))
     return df
 
 def monthly(year, month):
@@ -76,7 +76,7 @@ def cumulative(n_months, load_report, save_report):
                 data['%d-%d-01' % (year, month)] = monthly(year, month)
 
                 if save_report:
-                    data['%d-%d-01' % (year, month)].to_csv('data/%d_%d.csv' %
+                    data['%d-%d-01' % (year, month)].to_csv('data/monthly/%d_%d.csv' %
                                                             (year, month), encoding='utf-8', index=False)
 
             except:

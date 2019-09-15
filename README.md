@@ -24,7 +24,7 @@ git clone https://github.com/ch-lai/TWStock-Screener.git
 ```
 The folder should look something like the following:
 ```bash
-cd TWStock-Forecast
+cd TWStock-Screener
 
 ├─ data
 │  └─ monthly
