@@ -20,11 +20,11 @@ Implemented and tested on Ubuntu 18.04 with Python 3.6.
 
 1. Clone this repo
 ```bash
-git clone https://github.com/ch-lai/TWStock-Screener.git
+$ git clone https://github.com/ch-lai/TWStock-Screener.git
 ```
 The folder should look something like the following:
 ```bash
-cd TWStock-Screener
+$ cd TWStock-Screener
 
 ├─ data
 │  └─ monthly
@@ -38,13 +38,28 @@ cd TWStock-Screener
 
 2. Install Python dependencies
 ```bash
-pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 3. Run the scripts
 ```bash
-python main.py
+$ python main.py
 ```
+
+4. You can also select screener methods based on your preference
+```bash
+> main.py
+
+# Select multiple screener methods
+ss.Select_screener(_MoM_growth=True,
+                   _YoY_growth=True,
+                   _Total_YoY_growth=True,
+                   _Highest_revenue=True,
+                   _LongShortTerm_growth=True,
+                   _Trend_growth=True)
+```
+Screenshot of main.py:
+![here](data/demo/main.png)
 
 
 ## Viewing Results
