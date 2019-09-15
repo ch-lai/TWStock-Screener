@@ -86,9 +86,24 @@ class StockScreener:
             self.mask_Total_YoY_growth & self.mask_Highest_revenue & \
             self.mask_LongShortTerm_growth & self.mask_Trend_growth
 
+        idx = np.where(self.mask > 0)
+
+        # 參考營收增減評分並排序
+        score = self.data[list(self.data)[0]].to_numpy()[idx, 5] + self.data[list(
+            self.data)[0]].to_numpy()[idx, 6] + self.data[list(self.data)[0]].to_numpy()[idx, 9]
+        argsort = np.flip(np.squeeze(np.argsort(score, axis=1)))
+
+        # 只保留 [公司代號, 公司名稱]
+        self.result = self.data[list(self.data)[0]].to_numpy()[idx, :2]
+        self.result = np.squeeze(self.result, axis=0)
+
+        # 按照評分分數遞減排序
+        self.result = self.result[argsort, :]
+        print(self.result)
+
     def Save_txt(self):
         now = datetime.datetime.now()
         filename = str(now.year)+'_'+str(now.month) + \
             '_'+str(now.day)+'_stock_list.txt'
-        np.savetxt(filename, self.mask, fmt='%s')
+        np.savetxt(filename, self.result, fmt='%s')
         print("The recommended stock list is saved !")
