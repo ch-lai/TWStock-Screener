@@ -1,22 +1,30 @@
-from stock_screener import StockScreener
+from stock_screener import StockScreenerMonth
+from stock_screener import StockScreenerSeason
 
 
-# Init StockScreener
-ss = StockScreener(n_months=12, load_report=True, save_report=False)
+# Init StockScreener type
+ss = StockScreenerMonth()
+ss = StockScreenerSeason()
 
 # Select multiple screener methods
-ss.Select_screener(_MoM_growth=True,
-                   _YoY_growth=True,
-                   _Total_YoY_growth=True,
-                   _Highest_revenue=True,
-                   _LongShortTerm_growth=True,
-                   _Trend_growth=True,
-                   _GPM_growth=False,
-                   _OPM_growth=False,
-                   _NPM_growth=False)
+ss.Select_screener()
 
 # Filter stocks
 ss.Filter_stocks()
 
 # Save in txt
 ss.Save_txt()
+
+
+
+
+
+#########################################################
+# TODO-list:
+# 1. 評分法 0.8 < (EPS*殖利率)/PER(本益比) < 1.2
+# 2. 比較兩表相同的ID
+    # coo = long_one
+    # targets = short_one
+    # (coo[:, None] == targets).any(1)
+# 3. 
+#########################################################
