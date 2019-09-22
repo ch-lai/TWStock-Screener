@@ -58,13 +58,21 @@ def monthly(year, month):
 
     return df
 
-def seasonal(year, season):
+def seasonal(year, season, type='營益分析彙總表'):
 
     # 假如是西元，轉成民國
     if year > 1990:
         year -= 1911
 
-    url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb06'
+    if type == '營益分析彙總表':
+        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb06'
+    elif type == '綜合損益彙總表':
+        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb04'
+    elif type == '資產負債彙總表':
+        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb05'
+    else:
+        print('type does not match')
+    
 
     r = requests.post(url, {
         'encodeURIComponent': 1,
@@ -87,7 +95,6 @@ def seasonal(year, season):
         lambda x: x if x != '--' else np.nan)
     df = df[df['公司代號'] != '公司代號']
     df = df[~df['公司代號'].isnull()]
-    # df = df.drop(['合計：共 901 家'], axis=1)
 
     return df
 
@@ -165,7 +172,7 @@ def cast_n_seasons(n_seasons, load_report, save_report):
 
         else:
             try:
-                data['%d-%d-01' % (year, season)] = seasonal(year, season)
+                data['%d-%d-01' % (year, season)] = seasonal(year, season, type='營益分析彙總表')
 
                 if save_report:
                     data['%d-%d-01' % (year, season)].to_csv('data/seasonal/%d_%d.csv' %
