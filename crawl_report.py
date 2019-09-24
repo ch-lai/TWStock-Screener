@@ -53,9 +53,6 @@ def monthly(year, month):
     df = df[~df['當月營收'].isnull()]
     df = df[df['公司代號'] != '合計']
 
-    # 偽停頓
-    time.sleep(5)
-
     return df
 
 def seasonal(year, season, type='營益分析彙總表'):
@@ -66,35 +63,59 @@ def seasonal(year, season, type='營益分析彙總表'):
 
     if type == '營益分析彙總表':
         url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb06'
+
+        r = requests.post(url, {
+            'encodeURIComponent': 1,
+            'step': 1,
+            'firstin': 1,
+            'off': 1,
+            'TYPEK': 'sii',
+            'year': str(year),
+            'season': str(season),
+        })
+
+        r.encoding = 'utf8'
+        dfs = pd.read_html(r.text)
+
+        for i, df in enumerate(dfs):
+            df.columns = df.iloc[0]
+            dfs[i] = df.iloc[1:]
+
+        df = pd.concat(dfs, sort=False).applymap(
+            lambda x: x if x != '--' else np.nan)
+        df = df[df['公司代號'] != '公司代號']
+        df = df[~df['公司代號'].isnull()]
+
     elif type == '綜合損益彙總表':
         url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb04'
-    elif type == '資產負債彙總表':
-        url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb05'
+
+        r = requests.post(url, {
+            'encodeURIComponent': 1,
+            'step': 1,
+            'firstin': 1,
+            'off': 1,
+            'TYPEK': 'sii',
+            'year': str(year),
+            'season': str(season),
+        })
+
+        r.encoding = 'utf8'
+        dfs = pd.read_html(r.text)
+
+        df = pd.concat([df for df in dfs if df.shape[1] > 10], sort=False)        
+        df.columns = df.columns.get_level_values(0)
+
+        df['營業利益（損失）'] = pd.to_numeric(df['營業利益（損失）'], 'coerce')
+        df['營業外收入及支出'] = pd.to_numeric(df['營業外收入及支出'], 'coerce')
+        df['基本每股盈餘（元）'] = pd.to_numeric(df['基本每股盈餘（元）'], 'coerce')
+        df = df[~df['營業利益（損失）'].isnull()]
+        df = df[~df['營業外收入及支出'].isnull()]
+        df = df[~df['基本每股盈餘（元）'].isnull()]
+
+    # elif type == '資產負債彙總表':
+    #     url = 'https://mops.twse.com.tw/mops/web/ajax_t163sb05'
     else:
         print('type does not match')
-    
-
-    r = requests.post(url, {
-        'encodeURIComponent': 1,
-        'step': 1,
-        'firstin': 1,
-        'off': 1,
-        'TYPEK': 'sii',
-        'year': str(year),
-        'season': str(season),
-    })
-
-    r.encoding = 'utf8'
-    dfs = pd.read_html(r.text)
-
-    for i, df in enumerate(dfs):
-        df.columns = df.iloc[0]
-        dfs[i] = df.iloc[1:]
-
-    df = pd.concat(dfs, sort=False).applymap(
-        lambda x: x if x != '--' else np.nan)
-    df = df[df['公司代號'] != '公司代號']
-    df = df[~df['公司代號'].isnull()]
 
     return df
 
@@ -123,7 +144,7 @@ def cast_n_months(n_months, load_report, save_report):
                 data['%d-%d-01' % (year, month)] = monthly(year, month)
 
                 if save_report:
-                    data['%d-%d-01' % (year, month)].to_csv('data/monthly/%d_%d.csv' %
+                    data['%d-%d-01' % (year, month)].to_csv('data/monthly/營益分析彙總表/%d_%d.csv' %
                                                             (year, month), encoding='utf-8', index=False)
 
             except:
