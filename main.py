@@ -16,7 +16,7 @@ from stock_screener import StockScreenerSeason
 
 
 # Init StockScreener type
-# ss = StockScreenerMonth()
+ss = StockScreenerMonth()
 ss = StockScreenerSeason()
 
 # Select multiple screener methods

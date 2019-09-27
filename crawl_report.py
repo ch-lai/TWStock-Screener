@@ -144,7 +144,7 @@ def cast_n_months(n_months, load_report, save_report):
                 data['%d-%d-01' % (year, month)] = monthly(year, month)
 
                 if save_report:
-                    data['%d-%d-01' % (year, month)].to_csv('data/monthly/營益分析彙總表/%d_%d.csv' %
+                    data['%d-%d-01' % (year, month)].to_csv('data/monthly/%d_%d.csv' %
                                                             (year, month), encoding='utf-8', index=False)
 
             except:
@@ -196,7 +196,7 @@ def cast_n_seasons(n_seasons, load_report, save_report):
                 data['%d-%d-01' % (year, season)] = seasonal(year, season, type='營益分析彙總表')
 
                 if save_report:
-                    data['%d-%d-01' % (year, season)].to_csv('data/seasonal/%d_%d.csv' %
+                    data['%d-%d-01' % (year, season)].to_csv('data/seasonal/營益分析彙總表/%d_%d.csv' %
                                                              (year, season), encoding='utf-8', index=False)
 
             except:
