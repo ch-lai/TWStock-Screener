@@ -63,7 +63,7 @@ Select_screener(self,
                 _Total_YoY_growth=True,
                 _Highest_revenue=True,
                 _LongShortTerm_growth=True,
-                _Trend_growth=True):
+                _Trend_growth=True)
 
 # Select multiple screener methods based on financial reports
 Select_screener(self, 

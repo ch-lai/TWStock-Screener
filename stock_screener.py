@@ -121,6 +121,9 @@ class StockScreenerSeason:
         # 數據處理─結合季稅後純益率資訊
         self.df_npm = pd.DataFrame(
             {k: df['稅後純益率(%)(稅後純益)/(營業收入)'] for k, df in self.data_s.items()}).transpose().sort_index()
+        # 數據處理─結合季營業收入(百萬元)資訊
+        self.df_qor = pd.DataFrame(
+            {k: df['營業收入(百萬元)'] for k, df in self.data_s.items()}).transpose().sort_index()
 
         # 初始化選股遮罩
         self.mask = np.ones(
@@ -130,6 +133,10 @@ class StockScreenerSeason:
         self.mask_OPM_growth = np.ones(
             len(self.data_s[list(self.data_s)[0]]), dtype=np.int)
         self.mask_NPM_growth = np.ones(
+            len(self.data_s[list(self.data_s)[0]]), dtype=np.int)
+        self.mask_QOR_growth = np.ones(
+            len(self.data_s[list(self.data_s)[0]]), dtype=np.int)
+        self.mask_OPM_NPM_growth = np.ones(
             len(self.data_s[list(self.data_s)[0]]), dtype=np.int)
 
     def GPM_growth(self):
@@ -150,24 +157,42 @@ class StockScreenerSeason:
         cond2 = self.df_npm.iloc[-1] > self.df_npm.iloc[-2]
         self.mask_NPM_growth = np.asarray(cond1) & np.asarray(cond2)
 
+    def QOR_growth(self):
+        # 營業收入成長法選股
+        cond1 = self.df_qor.iloc[-2].astype(float) > 0
+        cond2 = self.df_qor.iloc[-1] > self.df_qor.iloc[-2]
+        self.mask_QOR_growth = np.asarray(cond1) & np.asarray(cond2)
+
+    def OPM_NPM_growth(self):
+        # 營業利益率 > 稅後純益率 (本業賺錢)
+        cond1 = self.df_opm.iloc[-2] > self.df_npm.iloc[-2]
+        cond2 = self.df_opm.iloc[-1] > self.df_npm.iloc[-1]
+        self.mask_OPM_NPM_growth = np.asarray(cond1) & np.asarray(cond2)
+
     def Select_screener(self, 
                         _GPM_growth=True,
                         _OPM_growth=True,
-                        _NPM_growth=True):
+                        _NPM_growth=True,
+                        _QOR_growth=True,
+                        _OPM_NPM_growth=True):
         if _GPM_growth:
             self.GPM_growth()
         if _OPM_growth:
             self.OPM_growth()
         if _NPM_growth:
             self.NPM_growth()
+        if _QOR_growth:
+            self.QOR_growth()
+        if _OPM_NPM_growth:
+            self.OPM_NPM_growth()
 
     def Filter_stocks(self):
-        self.mask = self.mask_GPM_growth & \
-            self.mask_OPM_growth & self.mask_NPM_growth
+        self.mask = self.mask_GPM_growth & self.mask_OPM_growth & \
+            self.mask_NPM_growth & self.mask_QOR_growth & self.mask_OPM_NPM_growth
 
         idx = np.where(self.mask > 0)
         
-        # 參考營收增減評分並排序
+        # 參考三率增減評分並排序
         score  = self.data_s[list(self.data_s)[0]].to_numpy()[idx, 3] - self.data_s[list(self.data_s)[1]].to_numpy()[idx, 3]
         score += self.data_s[list(self.data_s)[0]].to_numpy()[idx, 4] - self.data_s[list(self.data_s)[1]].to_numpy()[idx, 4]
         score += self.data_s[list(self.data_s)[0]].to_numpy()[idx, 6] - self.data_s[list(self.data_s)[1]].to_numpy()[idx, 6]
