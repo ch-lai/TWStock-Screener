@@ -11,7 +11,7 @@ def load_csv(year, month, type):
     if type == 'monthly':
         df = pd.read_csv('data/monthly/%d_%d.csv' % (year, month))
     elif type == 'seasonal':
-        df = pd.read_csv('data/seasonal/%d_%d.csv' % (year, month))
+        df = pd.read_csv('data/seasonal/營益分析彙總表/%d_%d.csv' % (year, month))
     else:
         print('get 404, wrong type')
 
